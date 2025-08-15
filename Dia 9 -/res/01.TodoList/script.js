@@ -132,6 +132,24 @@ function taskCompleted(liElement) {
  * LOCAL STORAGE
  * */
 
-function saveTasks() {}
+//key para el storage
+const STORAGE_KEY = "allTasks";
 
+//creamos la funcion para guardar tareas con JSON
+function saveTasks() {
+  try {
+    const items = []; //aqui guardamos los objetos simples
+
+    //seleccionar todos los <li> de la lista
+    const nodes = list.querySelector(".li");
+
+    //convertir los items a JSON
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  } catch (error) {
+    //alerta de error
+    alert("No se pudieron guardar las tareas con JSON");
+  }
+}
+
+//carga todas las tareas en el localStorage
 function loadTasks() {}
