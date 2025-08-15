@@ -10,6 +10,8 @@ const list = document.getElementById("list");
 
 //funcion para añadir una tarea
 function addTask() {
+  li.dataset.id = Date.now();
+
   //raw es el valor de input (texto ingresado)
   const raw = input.value;
   //el texto se normaliza y luego se mostrara
@@ -46,16 +48,30 @@ function addTask() {
    * */
 
   const completeButton = document.createElement("button");
-  completeButton.textContent = "Marcar como Completado";
+  completeButton.textContent = "Completado";
   completeButton.style.marginLeft = "10px";
   completeButton.style.backgroundColor = "green";
+  completeButton.className = "complete-button";
   //llamamos a la funcion de tarea completada
   completeButton.addEventListener("click", () => taskCompleted(li));
+
+  /**
+   * pendButton
+   **/
+
+  const pendButton = document.createElement("button");
+  pendButton.textContent = "Pendiente";
+  pendButton.style.marginLeft = "10px";
+  pendButton.style.backgroundColor = "blue";
+  pendButton.className = "pend-button";
+  //solo llamamos a la funcion para mandar una tarea a Pendiente
+  pendButton.addEventListener("click", () => pendTask(li));
 
   //ahora agregamos el li y span a traves de un childappend
   //para que se visualice en el DOM
   li.appendChild(span);
   li.appendChild(completeButton);
+  li.appendChild(pendButton);
   li.appendChild(deleteButton);
   list.appendChild(li);
 
@@ -153,3 +169,35 @@ function saveTasks() {
 
 //carga todas las tareas en el localStorage
 function loadTasks() {}
+
+// ================================================
+// FUNCIONALIDAD 3 (PRUEBAS DIA 3 15/08)
+// ================================================
+
+//funcion para enviar una tarea como pendiente (realizarla mas tarde)
+function pendTask(liElement) {
+  //si no se encuentra el liElement, entonces se vuelve a verificar
+  if (!liElement) return;
+
+  const span = liElement.querySelector("span");
+  if (!span) return;
+
+  const isPending = span.classList.toogle("pendiente");
+
+  liElement.dataset.pend = isPending ? "true" : "false";
+
+  const pendButton = liElement.querySelector(".pendButton");
+  if (pendButton) {
+    pendButton.textContent = isPending ? "Desmarcar" : "Marcar como Pendiente";
+    completeButton.setAttribute("aria-pressed", String(isPending));
+  }
+
+  const id = liElement.dataset.id ? Number(liElement.dataset.id) : null;
+  if (id !== null && typeof allTask !== "undefined") {
+    const task = allTasks.find((t) => t.id === id);
+    if (task) {
+      task.status = isPending ? "pending" : task.completed ? "done" : "";
+      if (typeof saveTasks === "function") saveTasks();
+    }
+  }
+}

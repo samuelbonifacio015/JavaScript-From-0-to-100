@@ -66,6 +66,11 @@ button:hover {
   opacity: 0.6;
 }
 
+.pendiente {
+  font-style: italic;
+  opacity: 0.7;
+}
+
 @media (max-width: 1024px) {
   .main-container {
     width: 90%;
